@@ -50,7 +50,7 @@ located in cloudsql. There's a separate readme there to get the backends setup a
 Once that's setup you can execute the same script from above to load this sample.
 
 ```bash
-node index.js -o geirs-purdy-project -n sz -e test1 -t $(gcloud auth print-access-token) -i $(gcloud auth print-identity-token) -m breweries -S stepzen-breweries-example
+./apizenSetup -o geirs-purdy-project -n sz -e test1 -t $(gcloud auth print-access-token) -i $(gcloud auth print-identity-token) -m breweries -S stepzen-breweries-example
 ```
 
 Here we've added an argument for the path to the breweries-schema setup plus set the model name to breweries.
