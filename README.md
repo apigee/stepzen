@@ -15,7 +15,7 @@ The whole setup is fully automated and as simple as running the following:
 npm i # or yarn if you prefer
 
 # now lets run the script proper
-node index.js -o geirs-purdy-project -n sz -e test1 -t $(gcloud auth print-access-token) -i $(gcloud auth print-identity-token)
+./apizenSetup -o geirs-purdy-project -n sz -e test1 -t $(gcloud auth print-access-token) -i $(gcloud auth print-identity-token) -z
 ```
 
 ## Testing the setup
