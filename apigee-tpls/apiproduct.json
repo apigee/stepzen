@@ -1,0 +1,37 @@
+{
+  "name": "APIZenProduct",
+  "displayName": "APIZenProduct",
+  "approvalType": "auto",
+  "attributes": [
+    {
+      "name": "access",
+      "value": "public"
+    }
+  ],
+  "description": "StepZen + Apigee Product",
+  "environments": [
+    "@%ENV%@"
+  ],
+  "operationGroup": {
+    "operationConfigs": [
+      {
+        "apiSource": "StepzenProxy",
+        "operations": [
+          {
+            "resource": "/",
+            "methods": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE",
+              "HEAD",
+              "OPTIONS"
+            ]
+          }
+        ],
+        "quota": {}
+      }
+    ],
+    "operationConfigType": "proxy"
+  }
+}

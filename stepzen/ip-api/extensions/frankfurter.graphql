@@ -1,0 +1,16 @@
+extend type Location {
+  """
+  Enter the currency of the seller in the from argument,
+  Enter the amount of goods sold in sellers currency in the amount argument
+  And get the price in the country of the ip address
+  """
+  priceInCountry(amount: Float!, from: String!): Float
+    @materializer(
+      query: "convertedAmount"
+      arguments: [
+        { name: "to", field: "currency" }
+        { name: "amount", argument: "amount" }
+        { name: "from", argument: "from" }
+      ]
+    )
+}

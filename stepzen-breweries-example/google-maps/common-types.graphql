@@ -1,0 +1,70 @@
+type Bounds {
+  northeast: Northeast
+  southwest: Southwest
+}
+
+type Location {
+  lat: Float
+  lng: Float
+}
+
+type Northeast {
+  lat: Float
+  lng: Float
+}
+
+type Southwest {
+  lat: Float
+  lng: Float
+}
+
+type Viewport {
+  northeast: Northeast
+  southwest: Southwest
+}
+
+type Geometry {
+  bounds: Bounds
+  location: Location
+  location_type: String
+  viewport: Viewport
+}
+
+type Address_component {
+  long_name: String
+  short_name: String
+  types: [String]
+}
+
+type Close {
+  day: Int
+  time: String
+}
+
+type Open {
+  day: Int
+  time: String
+}
+
+type Period {
+  close: Close
+  open: Open
+}
+
+type Opening_hours {
+  open_now: Boolean
+  periods: [Period]
+  weekday_text: [String]
+}
+
+type Photo {
+  height: Int
+  html_attributions: [String]
+  photo_reference: String
+  width: Int
+}
+
+type Plus_code {
+  compound_code: String
+  global_code: String
+}

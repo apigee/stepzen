@@ -1,0 +1,13 @@
+schema
+  @sdl(
+    files: [
+      "ip-api/ip-api.graphql"
+      "frankfurter/frankfurter.graphql"
+      "ip-api/extensions/frankfurter.graphql"
+      "google-maps/google-maps-common-types.graphql"
+      "google-maps/google-maps-nearby-search.graphql"
+      "ip-api/extensions/google-maps.graphql"
+    ]
+  ) {
+  query: Query
+}

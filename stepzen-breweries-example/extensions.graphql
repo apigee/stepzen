@@ -1,0 +1,20 @@
+extend type Brewery {
+  google_results: [Candidate] @materializer(query: "findBrewery")
+}
+
+type Query {
+  findBrewery(
+    name: String!
+    city: String!
+    language: String = "en"
+    """
+    The fields specifying the types of place data to return, separated by a comma. Default value: `business_status,formatted_address,geometry,icon,name,photos,place_id,plus_code,types`
+    """
+    fields: String = "business_status,formatted_address,geometry,icon,name,photos,place_id,plus_code,types"
+  ): [Candidate]
+    @rest(
+      endpoint: "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=$key&input=$name;,$city&inputtype=textquery&fields=$fields&language=$language"
+      configuration: "google-maps"
+      resultroot: "candidates[]"
+    )
+}

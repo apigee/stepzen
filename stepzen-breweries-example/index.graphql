@@ -1,0 +1,12 @@
+schema
+  @sdl(
+    files: [
+      "breweries.graphql"
+      "google-maps/common-types.graphql"
+      "google-maps/google-maps-find-place.graphql"
+      "google-maps/google-maps-place-details.graphql"
+      "extensions.graphql"
+    ]
+  ) {
+  query: Query
+}

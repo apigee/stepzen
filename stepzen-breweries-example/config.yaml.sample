@@ -1,0 +1,7 @@
+configurationset:
+  - configuration:
+      name: cloudsql_config
+      uri: postgres://{pguser}:{pgpass}@{pgipaddress}:5432/breweries
+  - configuration:
+      name: google-maps
+      key: {google maps api key}

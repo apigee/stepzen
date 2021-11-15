@@ -1,0 +1,189 @@
+"""
+the rate at the current point in time.
+"""
+type Latest_Rates {
+  """
+  amount of base current
+  """
+  amount: Float
+  """
+  base currency
+  """
+  base: String
+  """
+  date of rate in ISO 8601 format. For example "2021-10-03"
+  """
+  date: Date
+  """
+  object with key of currency code and float value
+  """
+  rates: JSON
+}
+
+"""
+the rate at a point in history.
+"""
+type Historical_Rates {
+  """
+  base currency
+  """
+  base: String
+  """
+  amount of money
+  """
+  amount: Float
+  """
+  date of rate in ISO 8601 format. For example "2021-10-03"
+  """
+  date: Date
+  """
+  object with key of currency code and float value based upon amount
+  """
+  rates: JSON
+}
+
+"""
+historical rates as a timeseries
+"""
+type TimeSeries_Rates {
+  """
+  base currency
+  """
+  base: String
+  """
+  base amount
+  """
+  amount: Float
+  """
+  start_date in ISO 8601 format. For example "2021-10-03"
+  """
+  start_date: Date
+  """
+  end_date in ISO 8601 format. For example "2021-10-03"
+  """
+  end_date: Date
+  """
+  object with key of currency code and float value based upon amount
+  """
+  rates: JSON
+}
+
+type Query {
+  """
+  This endpoint returns the latest rates.
+
+  The Frankfurter API tracks foreign exchange references rates published
+  by the European Central Bank. The data refreshes around 16:00 CET
+  every working day.
+  """
+  latest_rates(
+    """
+    use from to quote against other currencies.
+    Rates quote against the Euro by default.
+    """
+    from: String
+    """
+    to limits returned rates to specified values.
+    """
+    to: String
+
+    """
+    to convert from base amount to to amount (default 1)
+    """
+    amount: Float
+  ): Latest_Rates
+    @rest(endpoint: "https://api.frankfurter.app/latest")
+
+  """
+  returns rates for any working day since 4 January 1999
+  """
+  historical_rates(
+    """
+    base currency (default: EUR euro)
+    """
+    from: String
+    """
+    With a full list of currencies, the response grows large in size. For
+    better performance, use the to parameter to limit result to rates you
+    are interested in.
+    """
+    to: String
+    """
+    to convert from base amount to to amount (default 1)
+    """
+    amount: Float
+    """
+    date in ISO8601 format, for example, "2021-10-03".
+    """
+    date: Date
+  ): Historical_Rates
+    @rest(endpoint: "https://api.frankfurter.app/$date")
+
+  """
+  returns a set of historical rates for a given time period.
+  (since Jan 4 1999)
+  """
+  time_series(
+    """
+    base currency (default: EUR euro)
+    """
+    from: String
+    """
+    With a full list of currencies, the response grows large in size. For
+    better performance, use the to parameter to limit result to rates you
+    are interested in.
+    """
+    to: String
+    """
+    to convert from base amount to to amount (default 1)
+    """
+    amount: Float
+    """
+    start_date in ISO 8601 format. For example "2021-10-03"
+    """
+    start_date: Date
+    """
+    end_date in ISO 8601 format. For example "2021-10-03"
+    """
+    end_date: Date
+  ): TimeSeries_Rates
+    @rest(endpoint: "https://api.frankfurter.app/$start_date..$end_date")
+
+  """
+  available currency symbols along with their full names.
+  """
+  currency_list: JSON
+    @rest(endpoint: "https://api.frankfurter.app/currencies")
+
+  """
+  Convert a single amount between two currencies at the latest rate.
+  """
+  convertedAmount(
+    """
+    Amount to be converted.
+    """
+    amount: Float!
+    """
+    base currency
+    """
+    from: String!
+    """
+    target currency
+    """
+    to: String!
+  ): Float
+    @rest(
+      cel: """
+      function transformREST(s) {
+          var data = JSON.parse(s)
+          let toCurrency = get('to')
+          let amount = get('amount')
+          let convertedAmount = data["rates"][toCurrency]||1.00
+          convertedAmount = convertedAmount * amount
+
+          return JSON.stringify(convertedAmount)
+      }
+      """
+      endpoint: "https://api.frankfurter.app/latest?from=$from"
+    )
+}

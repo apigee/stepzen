@@ -1,0 +1,23 @@
+{
+  "name": "stepzen2apigee",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@stepzen/sdk": "^0.9.38",
+    "axios": "^0.21.1",
+    "commander": "^8.3.0",
+    "dotenv": "^10.0.0",
+    "form-data": "^4.0.0",
+    "graphql": "^15.5.3",
+    "graphql-request": "^3.6.1",
+    "replace-in-file": "^6.2.0",
+    "shelljs": "^0.8.4"
+  }
+}

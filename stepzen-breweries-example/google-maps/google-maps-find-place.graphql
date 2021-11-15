@@ -1,0 +1,67 @@
+type Candidate {
+  business_status: String
+  formatted_address: String
+  geometry: Geometry
+  icon: String
+  name: String
+  opening_hours: Opening_hours
+  photos: [Photo]
+  place_id: String
+  place_details: Place @materializer(query: "place")
+  plus_code: Plus_code
+  rating: Float
+  types: [String]
+  user_ratings_total: Int
+}
+
+type FindPlaceResults {
+  candidates: [Candidate]
+  status: String
+}
+
+enum InputType {
+  textquery
+  phonenumber
+}
+
+type Query {
+  """
+  A Find Place request takes a text input and returns a place. The input can be any kind of Places text data, such as a name, address, or phone number. The request must be a string. A Find Place request using non-string data such as a lat/lng coordinate or plus code generates an error.
+  TODO: update endpoint to "https://maps.googleapis.com/maps/api/place/findplacefromtext/json when https://github.com/steprz/zen/issues/4468 is resolved
+  """
+  findPlace(
+    """
+    Text input that identifies the search target, such as a name, address, or phone number. The input must be a string. Non-string input such as a lat/lng coordinate or plus code generates an error.
+    """
+    inputquery: String!
+    """
+    The type of input. This can be one of either `textquery` or `phonenumber`. Phone numbers must be in international format (prefixed by a plus sign ("+"), followed by the country code, then the phone number itself)
+    """
+    inputtype: InputType!
+    """
+    # TODO: following field is waiting on bug fix for https://github.com/steprz/zen/issues/4468
+    # docstring: Prefer results in a specified area, by specifying either a radius plus lat/lng, or two lat/lng pairs representing the points of a rectangle. If this parameter is not specified, the API uses IP address biasing by default.
+    # - IP bias: Instructs the API to use IP address biasing. Pass the string `ipbias` (this option has no additional parameters).
+    # - Point: A single lat/lng coordinate. Use the following format:
+    # `point:lat,lng`.
+    # - Circular: A string specifying radius in meters, plus lat/lng in decimal degrees.
+    # Use the following format: `circle:radius@lat,lng`.
+    # - Rectangular: A string specifying two lat/lng pairs in decimal degrees, representing the south/west and north/east points of a rectangle. Use the following format:
+    # `rectangle:south,west|north,east`. Note that east/west values are wrapped to the range -180, 180, and north/south values are clamped to the range -90, 90.
+    # docstring
+    # locationbias: String
+    docstring
+    The language code, indicating in which language the results should be returned, if possible. Searches are also biased to the selected language; results in the selected language may be given a higher ranking.
+    # TODO remove default value from this optional parameter .. waiting on bug fix for https://github.com/steprz/zen/issues/4468
+    """
+    language: String = "en"
+    """
+    The fields specifying the types of place data to return, separated by a comma. Default value: `business_status,formatted_address,geometry,icon,name,photos,place_id,plus_code,types`
+    """
+    fields: String = "business_status,formatted_address,geometry,icon,name,photos,place_id,plus_code,types"
+  ): FindPlaceResults
+    @rest(
+      endpoint: "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=$key&input=$inputquery&inputtype=$inputtype&fields=$fields&language=$language"
+      configuration: "google-maps"
+    )
+}

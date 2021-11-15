@@ -1,0 +1,4 @@
+configurationset:
+  - configuration:
+      name: google-maps
+      key: <apikey>

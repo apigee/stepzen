@@ -1,0 +1,51 @@
+type Brewery {
+  obdb_id: String!
+  name: String!
+  brewery_type: String
+  street: String
+  address_2: String
+  address_3: String
+  city: String
+  state: String
+  county_province: String
+  postal_code: String
+  website_url: String
+  phone: String
+  created_at: String
+  updated_at: String
+  country: String
+  latitude: Float
+  longitude: Float
+  tags: String
+}
+
+type Query {
+  allbreweries(first: Int! = 20, offset: Int! = 0): [Brewery]
+    @dbquery(
+      type: "postgresql"
+      query: "SELECT * FROM breweries ORDER BY obdb_id LIMIT $1 OFFSET $2"
+      configuration: "cloudsql_config"
+    )
+  breweriesByState(
+    state: String!
+    first: Int! = 20
+    offset: Int! = 0
+  ): [Brewery]
+    @dbquery(
+      type: "postgresql"
+      query: "SELECT * FROM breweries WHERE state = $1 ORDER BY obdb_id LIMIT $2 OFFSET $3"
+      configuration: "cloudsql_config"
+    )
+  breweriesByName(name: String!, first: Int! = 20, offset: Int! = 0): [Brewery]
+    @dbquery(
+      type: "postgresql"
+      query: "SELECT * FROM breweries WHERE name like '%' || $1 || '%'  ORDER BY obdb_id LIMIT $2 OFFSET $3"
+      configuration: "cloudsql_config"
+    )
+  breweryById(obdb_id: String!): Brewery
+    @dbquery(
+      type: "postgresql"
+      query: "SELECT * FROM breweries WHERE obdb_id = $1"
+      configuration: "cloudsql_config"
+    )
+}

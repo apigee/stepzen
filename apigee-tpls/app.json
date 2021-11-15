@@ -1,0 +1,23 @@
+{
+  "attributes": [
+    {
+      "name": "DisplayName",
+      "value": "APIZenApp"
+    }
+  ],
+  "credentials": [
+    {
+      "apiProducts": [
+        {
+          "apiproduct": "APIZenProduct",
+          "status": "approved"
+        }
+      ],
+      "status": "approved"
+    }
+  ],
+  "lastModifiedAt": "1635517953948",
+  "name": "APIZenApp",
+  "status": "approved",
+  "appFamily": "default"
+}

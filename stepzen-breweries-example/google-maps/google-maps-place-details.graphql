@@ -1,0 +1,67 @@
+type Review {
+  author_name: String
+  author_url: String
+  language: String
+  profile_photo_url: String
+  rating: Int
+  relative_time_description: String
+  text: String
+  time: Int
+}
+
+type Place {
+  address_components: [Address_component]
+  adr_address: String
+  business_status: String
+  formatted_address: String
+  formatted_phone_number: String
+  geometry: Geometry
+  icon: String
+  international_phone_number: String
+  name: String
+  opening_hours: Opening_hours
+  photos: [Photo]
+  place_id: String
+  plus_code: Plus_code
+  price_level: Int
+  rating: Float
+  reviews: [Review]
+  types: [String]
+  url: String
+  user_ratings_total: Int
+  utc_offset: Int
+  vicinity: String
+  website: String
+}
+
+type PlaceResults {
+  html_attributions: JSON
+  result: Place
+  status: String
+}
+
+type Query {
+  place(
+    """
+    place_id (required) — A textual identifier that uniquely identifies a place, returned from a Place Search. For more information about place IDs, see the [place ID overview](https://developers.google.com/maps/documentation/places/web-service/place-id).
+    """
+    place_id: ID!
+    """
+    The language code, indicating in which language the results should be returned, if possible. Searches are also biased to the selected language; results in the selected language may be given a higher ranking.
+    """
+    language: String
+    """
+    One or more fields, specifying the types of place data to return, separated by a comma.
+    """
+    fields: String
+    """
+    The region code, specified as a ccTLD (country code top-level domain) two-character value. Most ccTLD codes are identical to ISO 3166-1 codes, with some exceptions. This parameter will only influence, not fully restrict, search results. If more relevant results exist outside of the specified region, they may be included. When this parameter is used, the country name is omitted from the resulting `formatted_address` for results in the specified region.
+    """
+    region: String
+  ): Place
+    @rest(
+      endpoint: "https://maps.googleapis.com/maps/api/place/details/json?key=$key&place_id=$place_id"
+      configuration: "google-maps"
+      resultroot: "result"
+    )
+}

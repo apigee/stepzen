@@ -1,0 +1,47 @@
+extend type IPLocation {
+  """
+  Enter keyword, e.g. the name of a business, to search for the closest one to this location.
+  """
+  findNearby(keyword: String!): NearbySearchResult
+    @materializer(
+      query: "findnearby"
+      arguments: [{ name: "keyword", argument: "keyword" }]
+    )
+}
+
+type LatLon {
+  location: String
+}
+
+type Query {
+  findnearby(
+    keyword: String!
+    lat: Float!
+    lon: Float!
+    rankby: String! = "distance"
+  ): NearbySearchResult
+    @sequence(
+      steps: [
+        { query: "combineLatLong" }
+        {
+          query: "nearbySearch"
+          arguments: [
+            { name: "keyword", argument: "keyword" }
+            { name: "rankby", argument: "rankby" }
+          ]
+        }
+      ]
+    )
+  combineLatLong(lat: Float!, lon: Float!): LatLon
+    @rest(
+      endpoint: "stepzen:empty"
+      cel: """
+      function transformREST(s)
+      {
+          const lat = get("lat");
+          const lon = get("lon");
+          return JSON.stringify({location: lat + "," + lon});
+      }
+      """
+    )
+}

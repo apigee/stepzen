@@ -1,0 +1,159 @@
+type IPLocation {
+  """
+  success or fail
+  """
+  status: String
+  """
+  included only when status is fail
+  Can be one of the following: private range, reserved range, invalid query
+  """
+  message: String
+
+  """
+  Continent name
+  """
+  continent: String
+  """
+  Two-letter continent code
+  """
+  continentCode: String
+
+  """
+  Country name
+  """
+  country: String @mockfn(name: "List", values: ["United States"])
+
+  """
+  Two-letter country code ISO 3166-1 alpha-2
+  """
+  countryCode: String @mockfn(name: "List", values: ["US"])
+
+  """
+  Region/state short code (FIPS or ISO)
+  """
+  region: String
+  """
+  Region/state
+  """
+  regionName: String
+  """
+  City
+  """
+  city: String @mockfn(name: "List", values: ["Ashburn"])
+
+  """
+  District (subdivision of city)
+  """
+  district: String
+  """
+  Zip code
+  """
+  zip: String
+
+  """
+  Latitude
+  """
+  lat: Float @mockfn(name: "List", values: [39.03])
+
+  """
+  Longitude
+  """
+  lon: Float @mockfn(name: "List", values: [-77.5])
+
+  """
+  Timezone (tz)
+  """
+  timezone: String
+  """
+  Timezone UTC DST offset in seconds
+  """
+  offset: Int
+
+  """
+  National currency
+  """
+  currency: String
+
+  """
+  ISP name
+  """
+  isp: String @mockfn(name: "List", values: ["Google LLC"])
+
+  """
+  Organization name
+  """
+  org: String
+  """
+  AS number and organization, separated by space (RIR). Empty for IP blocks not being announced in BGP tables.
+  """
+  as: String
+  """
+  Reverse DNS of the IP (can delay response).  Not in default fields.
+  """
+  reserve: String
+  """
+  Mobile (cellular) connection
+  """
+  mobile: Boolean
+  """
+  Proxy, VPN or Tor exit address
+  """
+  proxy: Boolean
+  """
+  Hosting, colocated or data center
+  """
+  hosting: Boolean
+  """
+  IP used for the query
+  """
+  ip: String @mockfn(name: "List", values: ["8.8.8.8"])
+}
+
+"""
+StepZen_Request encapsulates many details of the call, here we are only interested in the ip address
+"""
+type StepZen_Request {
+  clientIp: String
+}
+
+type Query {
+  """
+  IP Geolocation.
+  https://ip-api.com/docs/api:json
+  """
+  location(
+    """
+    query ip (or domain)
+    """
+    ip: String!
+    """
+    ISO 639 code
+    """
+    lang: String! = "en"
+  ): IPLocation
+    @rest(
+      endpoint: "http://ip-api.com/json/$ip?fields=64745471&lang=$lang"
+      setters: [{ field: "ip", path: "query" }]
+    )
+  # 64745471 = status,message,continent,continentCode,country,countryCode,region,regionName,city,district,
+  #            zip,lat,lon,timezone,offset,currency,isp,org,as,mobile,proxy,hosting,query
+  """
+  Fetch IP Address of the caller
+  """
+  stepzen_request: StepZen_Request @connector(type: "request")
+  """
+  Fetch Details for the caller in two steps (@sequence directive)
+  1. Fetch IP Address of the caller
+  2. Use that IP Address to fetch details from ip-api
+  """
+  location_Auto(lang: String! = "en"): IPLocation
+    @sequence(
+      steps: [
+        { query: "stepzen_request" }
+        {
+          query: "location"
+          arguments: [{ name: "ip", field: "clientIp" }]
+        }
+      ]
+    )
+}

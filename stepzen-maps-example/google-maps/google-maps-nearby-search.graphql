@@ -1,0 +1,72 @@
+type NearbySearchResult {
+  business_status: String
+  geometry: Geometry
+  icon: String
+  name: String 
+  opening_hours: Opening_hours
+  photos: [Photo]
+  place_id: String
+  plus_code: Plus_code
+  price_level: Int 
+  rating: Float 
+  reference: String
+  scope: String
+  types: [String]
+  user_ratings_total: Int
+  vicinity: String 
+}
+
+type Query {
+  """
+  A Nearby Search lets you search for places within a specified area. You can refine your search request by supplying keywords or specifying the type of place you are searching for.
+  """
+  nearbySearch(
+    """
+    The latitude/longitude around which to retrieve place information. This must be specified as `latitude,longitude`.
+    """
+    location: String!
+    """
+    Defines the distance (in meters) within which to return place results. Note that radius must not be included if `rankby=distance` is specified.
+    """
+    radius: Int
+    """
+    A term to be matched against all content that Google has indexed for this place, including but not limited to name, type, and address, as well as customer reviews and other third-party content.
+    """
+    keyword: String
+    """
+    The language code, indicating in which language the results should be returned, if possible.
+    """
+    language: String
+    """
+    `minprice` and `maxprice` restricts results to only those places within the specified range. Valid values range between 0 (most affordable) to 4 (most expensive), inclusive. The exact amount indicated by a specific value will vary from region to region.
+    """
+    minprice: Int
+    """
+    `minprice` and `maxprice` restricts results to only those places within the specified range. Valid values range between 0 (most affordable) to 4 (most expensive), inclusive. The exact amount indicated by a specific value will vary from region to region.
+    """
+    maxprice: Int
+    """
+    Returns only those places that are open for business at the time the query is sent. Places that do not specify opening hours in the Google Places database will not be returned if you include this parameter in your query.
+    """
+    opennow: String
+    """
+    Specifies the order in which results are listed. Possible values are:
+    - `prominence` (default). This option sorts results based on their importance. Ranking will favor prominent places within the set radius over nearby places that match but that are less prominent. Prominence can be affected by a place's ranking in Google's index, global popularity, and other factors. When prominence is specified, the `radius` parameter is required.
+    - `distance`. This option biases search results in ascending order by their distance from the specified location. When distance is specified, one or more of keyword or type is required.
+    """
+    rankby: String
+    """
+    Restricts the results to places matching the specified type. Only one type may be specified (if more than one type is provided, all types following the first entry are ignored). See the [list of supported types](https://developers.google.com/maps/documentation/places/web-service/supported_types).
+    """
+    type: String
+    """
+    Returns up to 20 results from a previously run search. Setting a `pagetoken` parameter will execute a search with the same parameters used previously — all parameters other than `pagetoken` will be ignored.
+    """
+    pagetoken: String
+  ): [NearbySearchResult]
+    @rest(
+      resultroot: "results[]"
+      endpoint: "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=$key&location=$location"
+      configuration: "google-maps"
+    )
+}
