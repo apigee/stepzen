@@ -55,5 +55,16 @@ Once that's setup you can execute the same script from above to load this sample
 
 Here we've added an argument for the path to the breweries-schema setup plus set the model name to breweries.
 
-### *SNARF* Thundercats example
+### Next example
 More examples for the people
+
+## Disclaimer
+
+This is not an official Google product. Issues filed on Github are not subject
+to service level agreements (SLAs) and responses should be assumed to be on an
+ad-hoc volunteer basis.
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING](CONTRIBUTING.md) for notes
+on how to contribute to this project.
