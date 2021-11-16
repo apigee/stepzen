@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="set-stepzen-header">
+    <DisplayName>Set StepZen Header</DisplayName>
+    <Properties/>
+    <Set>
+        <Headers>
+            <Header name="Authorization">APIKEY {propertyset.StepZen.apikey}</Header>
+        </Headers>
+    </Set>
+    <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>

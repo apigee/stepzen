@@ -1,0 +1,26 @@
+<APIProxy revision="3" name="$APIGEE_PROXYNAME">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1635333160044</CreatedAt>
+    <LastModifiedAt>1635333160044</LastModifiedAt>
+    <BasePaths>$APIGEE_BASEPATH</BasePaths>
+    <Policies>
+        <Policy>set-stepzen-debug-header</Policy>
+        <Policy>modify-request</Policy>
+        <Policy>verify-api-key</Policy>
+        <Policy>set-stepzen-header</Policy>
+        <Policy>remove-query-param-apikey</Policy>
+        <Policy>graphql-policy</Policy>
+        <Policy>raise-405-error</Policy>
+        <Policy>extract-graphql-query</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <Resources>
+        <Resource>graphql://schema.graphql</Resource>
+    </Resources>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

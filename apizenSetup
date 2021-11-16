@@ -17,7 +17,7 @@
 const replace = require("replace-in-file");
 const { exec } = require("child_process");
 const util = require('util');
-const fs = require("fs");
+const fs = require("fs-extra");
 const axios = require("axios").default;
 const FormData = require("form-data");
 const app = require("./apigee-tpls/app.json");
@@ -55,7 +55,7 @@ program.parse(process.argv);
 const opts = program.opts();
 
 const MGMT_URL = 'https://apigee.googleapis.com/v1/organizations';
-const APIGEE_TEMPLATE_ZIP = "apiproxy.zip";
+const APIGEE_TEMPLATE = "apiproxy-tpl";
 const APIGEE_PROXYNAME=opts.proxyName;
 const APIGEE_BASEPATH=opts.basepath;
 const STEPZEN_FOLDER="api";
@@ -102,7 +102,7 @@ async function run() {
   const apigee_bundle = {
     stepzen_api_key: opts.STEPZEN_APIKEY,
     stepzen_admin_key: opts.STEPZEN_ADMINKEY,
-    template: APIGEE_TEMPLATE_ZIP,
+    template: APIGEE_TEMPLATE,
     org: opts.org,
     proxyname: APIGEE_PROXYNAME,
     basepath: APIGEE_BASEPATH,
@@ -194,16 +194,11 @@ function deployApigeeEndpoint(bundle) {
   fs.mkdtemp("temp-", (err, folder) => {
     if (err) throw err;
     console.log(`Using temp folder: ${folder}`);
-    // unzip template zip to temp folder
-    if (opts.debug) console.log("Unzipping %s into Folder: %s", bundle.template, folder);
-    const unzipcmd = `unzip ${bundle.template} -d ${folder}`;
-    exec(unzipcmd, (error, stdout, stderr) => {
-      if (error) throw error;
-      if (stderr) {
-        console.error(`Unzip error! stderr: ${stderr}`);
-        return;
-      }
-      // console.log(`stdout: ${stdout}`);
+    // copy template to temp folder and rename to apiproxy instead
+    if (opts.debug) console.log("Copying %s into Folder: %s", bundle.template, folder);
+    //exec(unzipcmd, (error, stdout, stderr) => {
+    fs.copy( bundle.template, `${folder}/apiproxy`)
+    .then( d => {
       // replace values in unzipped files
       const options = {
         files: `${folder}/apiproxy/**/*.xml`,
@@ -256,6 +251,11 @@ function deployApigeeEndpoint(bundle) {
             console.error("Failed while downloading schema from graphql endpoint. downloadSchema:", error);
           });
       });
+
+    })
+    .catch( e => {
+        console.error('Copy error: ',e);
+        throw e;
     });
   });
 }

@@ -1,0 +1,215 @@
+
+type StepZen_Request {
+  
+  clientIp: String
+}
+
+
+scalar JSON
+
+
+type TimeSeries_Rates {
+  
+  amount: Float
+
+  
+  base: String
+
+  
+  end_date: Date
+
+  
+  rates: JSON
+
+  
+  start_date: Date
+}
+
+
+type Query {
+  
+  convertedAmount(
+    
+    amount: Float!
+
+    
+    from: String!
+
+    
+    to: String!
+  ): Float
+
+  
+  currency_list: JSON
+
+  
+  historical_rates(
+    
+    from: String
+
+    
+    to: String
+
+    
+    amount: Float
+
+    
+    date: Date
+  ): Historical_Rates
+
+  
+  latest_rates(
+    
+    to: String
+
+    
+    amount: Float
+
+    
+    from: String
+  ): Latest_Rates
+
+  
+  location(
+    
+    ip: String!
+
+    
+    lang: String! = "en"
+  ): Location
+
+  
+  location_Auto(lang: String! = "en"): Location
+
+  
+  stepzen_request: StepZen_Request
+
+  
+  time_series(
+    
+    start_date: Date
+
+    
+    end_date: Date
+
+    
+    from: String
+
+    
+    to: String
+
+    
+    amount: Float
+  ): TimeSeries_Rates
+}
+
+
+type Historical_Rates {
+  
+  amount: Float
+
+  
+  base: String
+
+  
+  date: Date
+
+  
+  rates: JSON
+}
+
+
+type Location {
+  
+  as: String
+
+  
+  city: String
+
+  
+  continent: String
+
+  
+  continentCode: String
+
+  
+  country: String
+
+  
+  countryCode: String
+
+  
+  currency: String
+
+  
+  district: String
+
+  
+  hosting: Boolean
+
+  
+  ip: String
+
+  
+  isp: String
+
+  
+  lat: Float
+
+  
+  lon: Float
+
+  
+  message: String
+
+  
+  mobile: Boolean
+
+  
+  offset: Int
+
+  
+  org: String
+
+  
+  priceInCountry(amount: Float!, from: String!): Float
+
+  
+  proxy: Boolean
+
+  
+  region: String
+
+  
+  regionName: String
+
+  
+  reserve: String
+
+  
+  status: String
+
+  
+  timezone: String
+
+  
+  zip: String
+}
+
+
+type Latest_Rates {
+  
+  amount: Float
+
+  
+  base: String
+
+  
+  date: Date
+
+  
+  rates: JSON
+}
+
+
+scalar Date
