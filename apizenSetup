@@ -130,8 +130,7 @@ And with curl you can send an example query as follows (replace with your hostna
 
 curl -X POST 'https://<apigee_environment_host>${opts.basepath}?apikey=${opts.apigeeAPIKey}' \\
 -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' \\ 
---compressed --data-binary \\
-'{"query":"query RatesQuery {\\n  latest_rates(from: \\"SEK\\", to: \\"NOK\\") {\\n    amount\\n   base\\n    rates\\n  }\\n}","variables":{}}'
+ --compressed -d @gql-query.json
 
 ${ opts.showCreds ? "What Follows here are your StepZen credentials. Store them in ~/.stepzen/stepzen-config.yaml \
 to use this setup with the canonical StepZen tools:"  : "" }
@@ -196,10 +195,9 @@ function deployApigeeEndpoint(bundle) {
     console.log(`Using temp folder: ${folder}`);
     // copy template to temp folder and rename to apiproxy instead
     if (opts.debug) console.log("Copying %s into Folder: %s", bundle.template, folder);
-    //exec(unzipcmd, (error, stdout, stderr) => {
     fs.copy( bundle.template, `${folder}/apiproxy`)
     .then( d => {
-      // replace values in unzipped files
+      // replace values
       const options = {
         files: `${folder}/apiproxy/**/*.xml`,
         from: [

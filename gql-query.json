@@ -1,0 +1,11 @@
+{
+  "query": "{
+    location(ip: \"8.8.8.8\") {
+      city
+      continent
+      country
+      countryCode
+      priceInCountry(amount:100 from:\"EUR\")
+    }
+  }"
+}
