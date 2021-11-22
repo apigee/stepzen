@@ -68,3 +68,5 @@ certs
 yarn.lock
 
 .config
+
+config.yaml

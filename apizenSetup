@@ -16,14 +16,13 @@
 
 const replace = require("replace-in-file");
 const { exec } = require("child_process");
-const util = require('util');
 const fs = require("fs-extra");
 const axios = require("axios").default;
 const FormData = require("form-data");
 const app = require("./apigee-tpls/app.json");
 const developer = require("./apigee-tpls/developer.json");
 const productTpl = require("./apigee-tpls/apiproduct.json");
-const { request, gql } = require('graphql-request');
+const { request } = require('graphql-request');
 
 const ACCOUNT_ENDPOINT='https://stepzen.stepzen.net/google/accountlinker/__graphql';
 
@@ -92,6 +91,7 @@ async function run() {
     model: STEPZEN_MODEL,
     folder: STEPZEN_FOLDER ? STEPZEN_FOLDER : "api",
     host: STEPZEN_HOST ? STEPZEN_HOST : "stepzen",
+    configFile: `${opts.schemaDir}/config.yaml`,
     schemaDir: opts.schemaDir
   };
 
@@ -464,7 +464,6 @@ function createUpdateProxy(proxyzip, token) {
         })
         .catch(function (error) {
           console.error("Failed deploying proxy: %s", error.message);
-          console.error(error);
         });
     })
     .catch(function (error) {
@@ -488,7 +487,10 @@ function downloadSchema(endpoint, headers) {
         resolve(out.replace(regx, ""));
       })
       .catch(function (error) {
-        console.error("Failed deploying proxy: %s", error.message);
+        console.error("Failed fetching the schema: %s", error.message);
+        console.error(`We had tried to use this endpoint: ${endpoint}`);
+        console.error('We sent these headers: %j', headers);
+        process.exit(1);
       });
   });
 }
