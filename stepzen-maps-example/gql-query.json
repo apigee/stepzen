@@ -1,0 +1,14 @@
+{
+  "query": "
+    query MyQuery {
+    location(ip: \"8.8.8.8\") {
+      findNearby(keyword: \"Target\") {
+        name
+        vicinity
+      }
+      city
+      countryCode
+      regionName
+    }
+  }"
+}
