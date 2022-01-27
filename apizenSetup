@@ -70,7 +70,10 @@ try {
 // Main run function
 async function run() {
     if (opts.debug) console.log("Starting run...");
-    await validateAndUpdateOpts();
+    await validateAndUpdateOpts()
+    .catch( e => {
+      console.error("We got this error: ", e)
+    });
     // Let's start by dealing with the propertyset
     let exists = await getSZPropertySet(opts.apikey, opts.token);
     if ( exists ) {
@@ -178,7 +181,7 @@ async function getAccountDetails() {
 
 // validate 
 async function validateAndUpdateOpts() {
-    getAccountDetails()
+    await getAccountDetails()
     .then( d => {
         if (opts.debug) console.log("Setting ADMINKEY: %s, APIKEY:%s, and ACCOUNT:%s", d.getAccountDetails.adminKey, d.getAccountDetails.apiKey, d.getAccountDetails.accountName);
 
