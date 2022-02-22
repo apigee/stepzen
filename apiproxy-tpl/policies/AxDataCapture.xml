@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DataCapture name="AxDataCapture" continueOnError="true" enabled="true">
+  <DisplayName>AxDataCapture</DisplayName>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <Capture>
+    <Collect ref="dc_operation_1_name" default="NA"/>
+    <DataCollector>dc_operation_1_name</DataCollector>
+  </Capture>
+  <Capture>
+    <Collect ref="dc_operation_1_latency" default="0"/>
+    <DataCollector>dc_operation_1_latency</DataCollector>
+  </Capture>
+  <Capture>
+    <Collect ref="dc_operation_1_cachehitcount" default="0"/>
+    <DataCollector>dc_operation_1_cachehitcount</DataCollector>
+  </Capture>
+</DataCapture>

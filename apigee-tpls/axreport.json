@@ -1,0 +1,18 @@
+{
+  "displayName": "graphql-operations-report",
+  "metrics": [
+    {
+      "name": "dc_operation_1_latency",
+      "function": "avg"
+    },
+    {
+      "name": "dc_operation_1_cachehitcount",
+      "function": "avg"
+    }
+  ],
+  "dimensions": [
+    "dc_operation_1_name"
+  ],
+
+  "chartType": "line"
+}
