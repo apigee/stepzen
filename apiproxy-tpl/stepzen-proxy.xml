@@ -13,6 +13,8 @@
         <Policy>graphql-policy</Policy>
         <Policy>raise-405-error</Policy>
         <Policy>extract-graphql-query</Policy>
+        <Policy>AxDataCapture</Policy>
+        <Policy>populateFlowVarsForAx</Policy>
     </Policies>
     <ProxyEndpoints>
         <ProxyEndpoint>default</ProxyEndpoint>

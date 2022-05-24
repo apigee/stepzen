@@ -32,16 +32,7 @@
                 <Name>set-stepzen-debug-header</Name>
             </Step>
         </Request>
-        <Response>
-            <Step>
-                <Name>populateFlowVarsForAx</Name>
-                <Condition>response.status.code = 200</Condition>
-            </Step>
-            <Step>
-                <Name>AxDataCapture</Name>
-                <Condition>response.status.code = 200</Condition>
-            </Step>
-        </Response>
+        <Response/>
     </PreFlow>
     <PostFlow name="PostFlow">
         <Request>

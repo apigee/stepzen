@@ -22,11 +22,11 @@ const FormData = require("form-data");
 const app = require("./apigee-tpls/app.json");
 const developer = require("./apigee-tpls/developer.json");
 const productTpl = require("./apigee-tpls/apiproduct.json")
+const { request } = require('graphql-request');
 const dcop1name = require("./apigee-tpls/dc_operation_1_name.json");
 const dcop1latency = require("./apigee-tpls/dc_operation_1_latency.json");
 const dcop1cachehitcount = require("./apigee-tpls/dc_operation_1_cachehitcount.json");
 const axreport = require("./apigee-tpls/axreport.json");
-const { request } = require('graphql-request');
 
 const ACCOUNT_ENDPOINT='https://stepzen.stepzen.net/google/accountlinker/__graphql';
 
@@ -134,6 +134,12 @@ async function run() {
 
   //create custom report
    await createCustomReport(opts.token);
+
+   //create datacollectors
+   await createDataCollectors(opts.token);
+
+    //create custom report
+    await createCustomReport(opts.token);
 
   console.log(
     `
@@ -258,7 +264,7 @@ function deployApigeeEndpoint(bundle) {
 
 
                   if (opts.debug) console.log("About to delete temp directory: %s", folder);
-                  fs.rmdirSync(folder, { recursive: true });
+                  fs.rmSync(folder, { recursive: true });
                 });
               })
               .catch(function (error) {
@@ -550,6 +556,81 @@ async function createCustomReport(token){
 
 
 }
+
+
+
+//create data collector
+async function createDataCollectors(token){
+      let headers = {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              };
+   const URL = `https://apigee.googleapis.com/v1/organizations/${opts.org}/datacollectors`;
+
+   await axios
+       .post(URL, dcop1name, { headers: headers })
+       .then( r => {
+         console.log("Created datacollector operation_name");
+       })
+       .catch( e => {
+         if(e.response.status=409){
+           console.log("Datacollector operation_name already exists");
+         }else{
+           console.error("Error creating datacollector operation_name: %s", e.message);
+         }
+
+       });
+
+   await axios
+       .post(URL, dcop1latency, { headers: headers })
+       .then( r => {
+         console.log("Created datacollector operation_latency");
+       })
+       .catch( e => {
+         if(e.response.status=409){
+            console.log("Datacollector operation_latency already exists");
+         }else{
+            console.error("Error creating datacollector operation_latency: %s", e.message);
+         }
+       });
+
+   await axios
+       .post(URL, dcop1cachehitcount, { headers: headers })
+       .then( r => {
+         console.log("Created datacollector operation_cachehitcount");
+       })
+       .catch( e => {
+         if(e.response.status=409){
+           console.log("Datacollector operation_cachehitcount already exists");
+         }else{
+           console.error("Error creating datacollector operation_cachehitcount: %s", e.message);
+         }
+       });
+
+}
+
+
+
+async function createCustomReport(token){
+
+  const reportURL = `https://apigee.googleapis.com/v1/organizations/${opts.org}/reports`;
+
+   let headers = {
+             Authorization: `Bearer ${token}`,
+             "Content-Type": "application/json",
+           };
+
+     await axios
+         .post(reportURL, axreport, { headers: headers })
+         .then( r => {
+           console.log("Created custom report with datacollector");
+         })
+         .catch( e => {
+           console.error("Error creating customreport: %s", e.message);
+         });
+
+}
+
 
 // fetch the schema from the stepzen endpoint
 function downloadSchema(endpoint, headers) {

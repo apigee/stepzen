@@ -39,6 +39,28 @@ That will ouptut the following:
 	}
 }
 ```
+### Apigee analytics
+Apigee analytics report for graphQL operation can be seen by visting 'Custom reports' page under 'Analyze' in Apigee UI. 
+Custom report 'graphql-operations-report' will render the latencies as a line graph.
+
+Try running this query which includes a few additional typedefs in the query which includes a number of additional typdefs in the query.
+
+NOTE: This bash refers to a prepped query stored in ax-gql-query.json.
+
+```bash
+  curl -X POST 'https://<hostname>/graphql/stepzample?apikey=<your_api_key>'    -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' --compressed -d @ax-gql-query.json
+```
+### Apigee analytics
+Apigee analytics report for graphQL operation can be seen by visting 'Custom reports' page under 'Analyze' in Apigee UI. 
+Custom report 'graphql-operations-report' will render the latencies as a line graph.
+
+Try running this query which includes a few additional typedefs in the query which includes a number of additional typdefs in the query.
+
+NOTE: This bash refers to a prepped query stored in ax-gql-query.json.
+
+```bash
+  curl -X POST 'https://<hostname>/graphql/stepzample?apikey=<your_api_key>'    -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/json' -H 'Accept: application/json' --compressed -d @ax-gql-query.json
+```
 
 ## Apigee analytics
 Apigee analytics report for graphQL operation can be seen by visting 'Custom reports' page 
