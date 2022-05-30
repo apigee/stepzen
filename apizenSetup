@@ -135,13 +135,7 @@ async function run() {
   //create custom report
    await createCustomReport(opts.token);
 
-   //create datacollectors
-   await createDataCollectors(opts.token);
-
-    //create custom report
-    await createCustomReport(opts.token);
-
-  console.log(
+console.log(
     `
 Deployed an Apigee proxy with org = ${apigee_bundle.org}, backed by a StepZen endpoint
 at ${stepzenDeployedEndpoint.endpointURI}. These should both be functional now!
@@ -264,7 +258,7 @@ function deployApigeeEndpoint(bundle) {
 
 
                   if (opts.debug) console.log("About to delete temp directory: %s", folder);
-                  fs.rmSync(folder, { recursive: true });
+                  //fs.rmSync(folder, { recursive: true });
                 });
               })
               .catch(function (error) {
@@ -493,7 +487,7 @@ function createUpdateProxy(proxyzip, token) {
         });
     })
     .catch(function (error) {
-      console.error("Failed while trying to upload Apigee proxy: %s", error.message);
+      console.error("Failed while trying to upload Apigee proxy: %j", error);
     });
 }
 
@@ -534,101 +528,92 @@ async function createDataCollectors(token){
 
 }
 
-async function createCustomReport(token){
-
+async function listCustomReports(token) {
   const reportURL = `https://apigee.googleapis.com/v1/organizations/${opts.org}/reports`;
 
-   let headers = {
-             Authorization: `Bearer ${token}`,
-             "Content-Type": "application/json",
-           };
+  let headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
 
-
-     await axios
-         .post(reportURL, axreport, { headers: headers })
-         .then( r => {
-           console.log("Created custom report with datacollector");
-         })
-         .catch( e => {
-           console.error("Error creating customreport: %s", e.message);
-         });
-
-
-
+  return await axios
+    .get(reportURL, { headers: headers })
+    .then( r => r.data?.qualifier)
+    .catch( e => {
+      console.error("Error fetching report list %j", e);
+    });
 }
+  
 
+async function createCustomReport(token){
+  const reportURL = `https://apigee.googleapis.com/v1/organizations/${opts.org}/reports`;
+
+  let headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+
+  let reports = await listCustomReports(token);
+
+  if (reports != undefined && reports.find(i => i.displayName === axreport.displayName)) {
+    console.log('--- Custom report already exists');
+  }
+  else {
+    await axios
+      .post(reportURL, axreport, { headers: headers })
+      .then( r => {
+        console.log("Created custom report with datacollector");
+      })
+      .catch( e => {
+        console.error("Error creating customreport: %s", e.message);
+      });
+  }
+}
 
 
 //create data collector
 async function createDataCollectors(token){
-      let headers = {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              };
-   const URL = `https://apigee.googleapis.com/v1/organizations/${opts.org}/datacollectors`;
+  let headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+  const URL = `https://apigee.googleapis.com/v1/organizations/${opts.org}/datacollectors`;
+
+  await axios
+    .post(URL, dcop1name, { headers: headers })
+    .then(console.log("Created datacollector operation_name"))
+    .catch( e => {
+      if(e.response.status === 409){
+        console.log("Datacollector operation_name already exists");
+      }
+      else {
+        console.error("Error creating datacollector operation_name: %s", e.message);
+      }
+    });
 
    await axios
-       .post(URL, dcop1name, { headers: headers })
-       .then( r => {
-         console.log("Created datacollector operation_name");
-       })
-       .catch( e => {
-         if(e.response.status=409){
-           console.log("Datacollector operation_name already exists");
-         }else{
-           console.error("Error creating datacollector operation_name: %s", e.message);
-         }
-
-       });
+    .post(URL, dcop1latency, { headers: headers })
+    .then(console.log("Created datacollector operation_latency"))
+    .catch( e => {
+      if (e.response.status === 409) {
+        console.log("Datacollector operation_latency already exists");
+      }
+      else {
+        console.error("Error creating datacollector operation_latency: %s", e.message);
+      }
+    });
 
    await axios
-       .post(URL, dcop1latency, { headers: headers })
-       .then( r => {
-         console.log("Created datacollector operation_latency");
-       })
-       .catch( e => {
-         if(e.response.status=409){
-            console.log("Datacollector operation_latency already exists");
-         }else{
-            console.error("Error creating datacollector operation_latency: %s", e.message);
-         }
-       });
-
-   await axios
-       .post(URL, dcop1cachehitcount, { headers: headers })
-       .then( r => {
-         console.log("Created datacollector operation_cachehitcount");
-       })
-       .catch( e => {
-         if(e.response.status=409){
-           console.log("Datacollector operation_cachehitcount already exists");
-         }else{
-           console.error("Error creating datacollector operation_cachehitcount: %s", e.message);
-         }
-       });
-
-}
-
-
-
-async function createCustomReport(token){
-
-  const reportURL = `https://apigee.googleapis.com/v1/organizations/${opts.org}/reports`;
-
-   let headers = {
-             Authorization: `Bearer ${token}`,
-             "Content-Type": "application/json",
-           };
-
-     await axios
-         .post(reportURL, axreport, { headers: headers })
-         .then( r => {
-           console.log("Created custom report with datacollector");
-         })
-         .catch( e => {
-           console.error("Error creating customreport: %s", e.message);
-         });
-
+    .post(URL, dcop1cachehitcount, { headers: headers })
+    .then(console.log("Created datacollector operation_cachehitcount"))
+    .catch( e => {
+      if (e.response.status === 409) {
+        console.log("Datacollector operation_cachehitcount already exists");
+      }
+      else {
+        console.error("Error creating datacollector operation_cachehitcount: %s", e.message);
+      }
+    });
 }
 
 

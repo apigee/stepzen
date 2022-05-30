@@ -5,6 +5,8 @@
     <Set>
         <Headers>
             <Header name="Authorization">APIKEY {propertyset.StepZen.apikey}</Header>
+            <!--Add ax header to get analytics response from stepzen-->
+            <Header name="X-GraphQL-Analytics-Enabled">true</Header>
         </Headers>
     </Set>
     <AssignTo createNew="false" transport="http" type="request"/>
