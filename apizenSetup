@@ -258,7 +258,7 @@ function deployApigeeEndpoint(bundle) {
 
 
                   if (opts.debug) console.log("About to delete temp directory: %s", folder);
-                  //fs.rmSync(folder, { recursive: true });
+                  fs.rmSync(folder, { recursive: true });
                 });
               })
               .catch(function (error) {
@@ -568,52 +568,6 @@ async function createCustomReport(token){
         console.error("Error creating customreport: %s", e.message);
       });
   }
-}
-
-
-//create data collector
-async function createDataCollectors(token){
-  let headers = {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
-  const URL = `https://apigee.googleapis.com/v1/organizations/${opts.org}/datacollectors`;
-
-  await axios
-    .post(URL, dcop1name, { headers: headers })
-    .then(console.log("Created datacollector operation_name"))
-    .catch( e => {
-      if(e.response.status === 409){
-        console.log("Datacollector operation_name already exists");
-      }
-      else {
-        console.error("Error creating datacollector operation_name: %s", e.message);
-      }
-    });
-
-   await axios
-    .post(URL, dcop1latency, { headers: headers })
-    .then(console.log("Created datacollector operation_latency"))
-    .catch( e => {
-      if (e.response.status === 409) {
-        console.log("Datacollector operation_latency already exists");
-      }
-      else {
-        console.error("Error creating datacollector operation_latency: %s", e.message);
-      }
-    });
-
-   await axios
-    .post(URL, dcop1cachehitcount, { headers: headers })
-    .then(console.log("Created datacollector operation_cachehitcount"))
-    .catch( e => {
-      if (e.response.status === 409) {
-        console.log("Datacollector operation_cachehitcount already exists");
-      }
-      else {
-        console.error("Error creating datacollector operation_cachehitcount: %s", e.message);
-      }
-    });
 }
 
 
