@@ -3,7 +3,12 @@
     {
       "name": "DisplayName",
       "value": "APIZenApp"
+    },
+    {
+      "name": "StepZenDebug",
+      "value": "false"
     }
+
   ],
   "credentials": [
     {
